@@ -1,17 +1,15 @@
 package com.klekchyan.pixabayviewer.ui.listOfPhotos
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.klekchyan.pixabayviewer.network.PhotoContainerNetworkModel
-import com.klekchyan.pixabayviewer.network.PixabayApi
 import com.klekchyan.pixabayviewer.data.PhotoRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.klekchyan.pixabayviewer.network.PixabayApi
 
-class PhotoListViewModel(private val query: String): ViewModel() {
-    private val photoRepository = PhotoRepository(query)
-    val data = photoRepository.data.cachedIn(viewModelScope)
+class PhotoListViewModel(query: String): ViewModel() {
+    private val photoRepository = PhotoRepository(PixabayApi.pixabayApiService)
+    val photoContainers = photoRepository.getPhotoContainers(query).cachedIn(viewModelScope)
 }
 
 class PhotoListViewModelFactory(

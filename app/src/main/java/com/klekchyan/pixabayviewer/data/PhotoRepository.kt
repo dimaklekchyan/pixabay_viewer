@@ -1,18 +1,17 @@
 package com.klekchyan.pixabayviewer.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.*
-import com.klekchyan.pixabayviewer.domain.PhotoContainer
-import com.klekchyan.pixabayviewer.network.PixabayApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
 import com.klekchyan.pixabayviewer.network.PixabayApiService
 
-class PhotoRepository(private val query: String){
-    val data: LiveData<PagingData<PhotoContainer>> = Pager(
+class PhotoRepository(private val pixabayApiService: PixabayApiService){
+    fun getPhotoContainers(query: String) =
+        Pager(
             config = PagingConfig(
                 pageSize = PixabayApiService.MAX_PAGE_SIZE,
                 enablePlaceholders = false,
                 maxSize = PixabayApiService.MAX_PAGE_SIZE * 5),
-            pagingSourceFactory = { PixabayPagingSource(PixabayApi.pixabayApiService, query) }
+            pagingSourceFactory = { PixabayPagingSource(pixabayApiService, query) }
         ).liveData
 }

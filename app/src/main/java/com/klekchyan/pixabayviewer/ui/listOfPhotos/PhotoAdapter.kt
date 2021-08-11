@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.klekchyan.pixabayviewer.databinding.PhotoItemBinding
 import com.klekchyan.pixabayviewer.domain.PhotoContainer
 
-class PhotoAdapter(val clickListener: PhotoAdapterClickListener): PagingDataAdapter<PhotoContainer, PhotoAdapter.PhotoViewHolder>(PhotoAdapterDiffCallBack()) {
+class PhotoAdapter(private val clickListener: PhotoAdapterClickListener): PagingDataAdapter<PhotoContainer, PhotoAdapter.PhotoViewHolder>(PhotoAdapterDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         return PhotoViewHolder.from(parent)

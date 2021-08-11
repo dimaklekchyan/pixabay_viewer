@@ -9,8 +9,8 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class PixabayPagingSource(
-    val service: PixabayApiService,
-    val query: String
+    private val service: PixabayApiService,
+    private val query: String
 ): PagingSource<Int, PhotoContainer>() {
     override fun getRefreshKey(state: PagingState<Int, PhotoContainer>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
