@@ -37,6 +37,10 @@ interface PixabayApiService {
         @Query(PARAMETER_PAGE) page: Int,
         @Query(PARAMETER_PER_PAGE) perPage: Int
     ) : PhotoContainerNetworkModel
+
+    companion object {
+        const val MAX_PAGE_SIZE = 20
+    }
 }
 
 object PixabayApi {

@@ -1,9 +1,7 @@
 package com.klekchyan.pixabayviewer.ui.listOfPhotos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.cachedIn
 import com.klekchyan.pixabayviewer.network.PhotoContainerNetworkModel
 import com.klekchyan.pixabayviewer.network.PixabayApi
 import com.klekchyan.pixabayviewer.data.PhotoRepository
@@ -11,18 +9,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PhotoListViewModel: ViewModel() {
-    private val photoRepository = PhotoRepository()
-    private val _list = MutableLiveData<PhotoContainerNetworkModel>()
-    val list: LiveData<PhotoContainerNetworkModel>
-        get() = _list
+class PhotoListViewModel(private val query: String): ViewModel() {
+    private val photoRepository = PhotoRepository(query)
+    val data = photoRepository.data
+}
 
-    init{
-        viewModelScope.launch {
-            val response = PixabayApi.pixabayApiService.getPhotosByCategory(category = "health", page = 1, perPage = 30)
-            withContext(Dispatchers.Main){
-                _list.value = response
-            }
+class PhotoListViewModelFactory(
+    private val query: String): ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(PhotoListViewModel::class.java)) {
+            return PhotoListViewModel(query) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
