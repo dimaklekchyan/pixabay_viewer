@@ -9,16 +9,16 @@
             type="com.klekchyan.pixabayviewer.ui.listOfPhotos.PhotoAdapterClickListener" />
     </data>
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="200dp"
+        android:layout_height="200dp">
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-            <TextView
-                android:id="@+id/test_text_view"
-                android:text="@{String.valueOf(photoContainer.id)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                setImage="@{photoContainer.previewUrl}"/>
         </com.google.android.material.card.MaterialCardView>
     </FrameLayout>
 </layout>

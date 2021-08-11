@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 class PhotoListViewModel(private val query: String): ViewModel() {
     private val photoRepository = PhotoRepository(query)
-    val data = photoRepository.data
+    val data = photoRepository.data.cachedIn(viewModelScope)
 }
 
 class PhotoListViewModelFactory(
