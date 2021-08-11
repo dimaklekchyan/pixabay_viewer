@@ -3,26 +3,47 @@ plugins {
     id 'kotlin-android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
-    id 'kotlinx-serialization'
+    id 'kotlin-parcelize'
 }
 
 android {
+
     compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.klekchyan.pixabayviewer"
+        applicationId "com.klekchyan.asteroidsnews"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            def properties = new Properties()
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+            def apiKey = properties.getProperty("api_key", "DEMO_KEY")
+
+            it.buildConfigField 'String', "API_KEY", apiKey
+            it.resValue 'string', "api_key", apiKey
+
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            def properties = new Properties()
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+            def apiKey = properties.getProperty("api_key", "DEMO_KEY")
+
+            it.buildConfigField 'String', "API_KEY", apiKey
+            it.resValue 'string', "api_key", apiKey
         }
     }
     compileOptions {
@@ -32,6 +53,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     dataBinding{
         enabled = true
     }
@@ -42,33 +64,34 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.core:core-ktx:$ktx_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "com.google.android.material:material:$material_design_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
 
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
+    //Test
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"
+
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinx_serialization_converter"
-    //Gson
-    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
+    //Paging
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
 
     //RecyclerView
     implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
     implementation "androidx.recyclerview:recyclerview-selection:$recycler_view_selection_version"
 
-    //Paging
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-
     //Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
 
-    //Test
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"
+    //Material Design
+    implementation "com.google.android.material:material:$material_design_version"
 }
