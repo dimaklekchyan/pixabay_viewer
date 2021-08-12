@@ -2,5 +2,5 @@
 <resources>
     <dimen name="general_elevation">4dp</dimen>
     <dimen name="corner_radius">4dp</dimen>
-    <dimen name="card_view_dimension">150dp</dimen>
+    <dimen name="card_view_dimension">300dp</dimen>
 </resources>

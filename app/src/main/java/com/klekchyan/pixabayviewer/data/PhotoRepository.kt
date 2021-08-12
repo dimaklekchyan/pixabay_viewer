@@ -11,7 +11,7 @@ class PhotoRepository(private val pixabayApiService: PixabayApiService){
             config = PagingConfig(
                 pageSize = PixabayApiService.MAX_PAGE_SIZE,
                 enablePlaceholders = false,
-                maxSize = PixabayApiService.MAX_PAGE_SIZE * 5),
+                maxSize = PixabayApiService.MAX_PAGE_SIZE * 3),
             pagingSourceFactory = { PixabayPagingSource(pixabayApiService, query) }
         ).liveData
 }

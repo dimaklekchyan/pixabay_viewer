@@ -39,7 +39,7 @@ interface PixabayApiService {
     ) : PhotoContainerNetworkModel
 
     companion object {
-        const val MAX_PAGE_SIZE = 20
+        const val MAX_PAGE_SIZE = 10
     }
 }
 

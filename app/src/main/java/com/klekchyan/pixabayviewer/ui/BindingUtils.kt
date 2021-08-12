@@ -4,7 +4,7 @@ import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.klekchyan.pixabayviewer.R
 
 @BindingAdapter("setImage")
@@ -13,10 +13,9 @@ fun ImageView.setImage(url: String?){
         val imgUri = url.toUri().buildUpon().scheme("https").build()
         Glide.with(context)
             .load(imgUri)
-            .apply(
-                RequestOptions()
-                .placeholder(R.drawable.loading_animation)
-                .error(R.drawable.ic_broken_image))
+            .centerCrop()
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .error(R.drawable.ic_broken_image)
             .into(this)
     }
 }
