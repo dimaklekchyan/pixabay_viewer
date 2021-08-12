@@ -3,6 +3,7 @@ package com.klekchyan.pixabayviewer.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.klekchyan.pixabayviewer.domain.PhotoContainer
+import com.klekchyan.pixabayviewer.network.PixabayApi
 import com.klekchyan.pixabayviewer.network.PixabayApiService
 import com.klekchyan.pixabayviewer.network.toListOfPhotoContainer
 import retrofit2.HttpException
@@ -24,7 +25,7 @@ class PixabayPagingSource(
         return try{
             val response = service.getPhotosByCategory(category = query, page = pageNumber, perPage = pageSize)
             val photoContainers = response.toListOfPhotoContainer()
-            val nextKey = if(photoContainers.isEmpty()) null else pageNumber + 1
+            val nextKey = if(photoContainers.isEmpty()) null else pageNumber + (params.loadSize / PixabayApiService.MAX_PAGE_SIZE)
             val prevKey = if(pageNumber == INITIAL_PAGE_NUMBER) null else pageNumber - 1
             LoadResult.Page(data = photoContainers, prevKey = prevKey, nextKey = nextKey)
         } catch (ex: IOException){
