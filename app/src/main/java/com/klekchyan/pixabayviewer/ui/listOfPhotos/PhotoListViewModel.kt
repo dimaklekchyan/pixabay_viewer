@@ -1,15 +1,26 @@
 package com.klekchyan.pixabayviewer.ui.listOfPhotos
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.klekchyan.pixabayviewer.data.PhotoRepository
-import com.klekchyan.pixabayviewer.network.PixabayApi
+import com.klekchyan.pixabayviewer.domain.PhotoContainer
 
 class PhotoListViewModel(query: String): ViewModel() {
-    private val photoRepository = PhotoRepository(PixabayApi.pixabayApiService)
+    private val photoRepository = PhotoRepository()
+
+    private val _navigateToPhotoFragment = MutableLiveData<PhotoContainer?>()
+    val navigateToPhotoFragment: LiveData<PhotoContainer?>
+        get() = _navigateToPhotoFragment
     val photoContainers = photoRepository.getPhotoContainers(query).cachedIn(viewModelScope)
+
+    fun onPhotoClicked(photoContainer: PhotoContainer?){
+        _navigateToPhotoFragment.value = photoContainer
+    }
+
+    fun navigateToPhotoFragmentDone(){
+        _navigateToPhotoFragment.value = null
+    }
+
 }
 
 class PhotoListViewModelFactory(

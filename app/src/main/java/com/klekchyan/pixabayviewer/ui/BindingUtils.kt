@@ -15,7 +15,7 @@ fun ImageView.setImage(url: String?){
         val imgUri = url.toUri().buildUpon().scheme("https").build()
         Glide.with(context)
             .load(imgUri)
-            .centerCrop()
+            .optionalCenterCrop()
             .transition(DrawableTransitionOptions.withCrossFade())
             .error(R.drawable.ic_broken_image)
             .into(this)

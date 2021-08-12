@@ -8,7 +8,7 @@ import com.klekchyan.pixabayviewer.data.PhotoRepository
 import com.klekchyan.pixabayviewer.network.PixabayApi
 
 class CategoriesViewModel: ViewModel() {
-    private val repository = PhotoRepository(PixabayApi.pixabayApiService)
+    private val repository = PhotoRepository()
 
     private val _categories = MutableLiveData<List<Category>>()
     private val _navigateToPhotoListFragment = MutableLiveData<Category?>()

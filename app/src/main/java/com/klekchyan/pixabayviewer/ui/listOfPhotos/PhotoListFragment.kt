@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.klekchyan.pixabayviewer.databinding.FragmentPhotosListBinding
-import timber.log.Timber
 
 class PhotoListFragment : Fragment() {
     private var _binding: FragmentPhotosListBinding? = null
@@ -16,9 +16,8 @@ class PhotoListFragment : Fragment() {
         PhotoListViewModelFactory(PhotoListFragmentArgs.fromBundle(requireArguments()).category)
     }
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
-        PhotoAdapter(PhotoAdapterClickListener {
-            //TODO add navigate to specific photo
-            Timber.d("${it?.id}")
+        PhotoAdapter(PhotoAdapterClickListener { photoContainer ->
+            viewModel.onPhotoClicked(photoContainer)
         })
     }
 
@@ -40,6 +39,14 @@ class PhotoListFragment : Fragment() {
 
         viewModel.photoContainers.observe(viewLifecycleOwner, { data ->
             adapter.submitData(viewLifecycleOwner.lifecycle, data)
+        })
+
+        viewModel.navigateToPhotoFragment.observe(viewLifecycleOwner, { photoContainer ->
+            photoContainer?.let {
+                findNavController()
+                    .navigate(PhotoListFragmentDirections.actionPhotoListFragmentToPhotoFragment(it.largeImageUrl))
+                viewModel.navigateToPhotoFragmentDone()
+            }
         })
     }
 
