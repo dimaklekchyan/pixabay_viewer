@@ -14,4 +14,30 @@ class PhotoRepository(private val pixabayApiService: PixabayApiService){
                 maxSize = PixabayApiService.MAX_PAGE_SIZE * 3),
             pagingSourceFactory = { PixabayPagingSource(pixabayApiService, query) }
         ).liveData
+
+    fun getCategories(): List<Category>{
+        return Category.values().toList()
+    }
+}
+enum class Category{
+    BACKGROUNDS,
+    FASHION,
+    NATURE,
+    SCIENCE,
+    EDUCATION,
+    FEELINGS,
+    HEALTH,
+    PEOPLE,
+    RELIGION,
+    PLACES,
+    ANIMALS,
+    INDUSTRY,
+    COMPUTER,
+    FOOD,
+    SPORTS,
+    TRANSPORTATION,
+    TRAVEL,
+    BUILDINGS,
+    BUSINESS,
+    MUSIC
 }

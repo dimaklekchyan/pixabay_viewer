@@ -2,6 +2,12 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="listener"
+            type="com.klekchyan.pixabayviewer.ui.listOfPhotos.PhotoLoadStateClickListener" />
+    </data>
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -23,7 +29,8 @@
             android:id="@+id/retry_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/retry"/>
+            android:text="@string/retry"
+            android:onClick="@{() -> listener.onClick()}"/>
 
     </LinearLayout>
 </layout>

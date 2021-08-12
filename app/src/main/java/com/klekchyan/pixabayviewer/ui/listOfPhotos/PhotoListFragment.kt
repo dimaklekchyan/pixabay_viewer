@@ -13,7 +13,7 @@ class PhotoListFragment : Fragment() {
     private var _binding: FragmentPhotosListBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PhotoListViewModel by viewModels {
-        PhotoListViewModelFactory("health")
+        PhotoListViewModelFactory(PhotoListFragmentArgs.fromBundle(requireArguments()).category)
     }
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         PhotoAdapter(PhotoAdapterClickListener {

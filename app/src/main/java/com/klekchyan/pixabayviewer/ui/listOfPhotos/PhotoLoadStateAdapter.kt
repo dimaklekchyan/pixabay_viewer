@@ -12,36 +12,29 @@ class PhotoLoadStateAdapter(private val clickListener: PhotoLoadStateClickListen
     : LoadStateAdapter<PhotoLoadStateAdapter.PhotoLoadStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): PhotoLoadStateViewHolder {
-        return PhotoLoadStateViewHolder.from(parent, clickListener)
+        return PhotoLoadStateViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: PhotoLoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
+        holder.bind(loadState, clickListener)
     }
 
-    class PhotoLoadStateViewHolder(
-        private val binding: PhotoLoadStateBinding,
-        private val listener: PhotoLoadStateClickListener) : RecyclerView.ViewHolder(binding.root){
-
-        init {
-            binding.retryButton.setOnClickListener {
-                listener.onClick()
-            }
-        }
+    class PhotoLoadStateViewHolder(private val binding: PhotoLoadStateBinding) : RecyclerView.ViewHolder(binding.root){
 
         companion object{
-            fun from(parent: ViewGroup, listener: PhotoLoadStateClickListener): PhotoLoadStateViewHolder{
+            fun from(parent: ViewGroup): PhotoLoadStateViewHolder{
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = PhotoLoadStateBinding.inflate(layoutInflater, parent, false)
-                return PhotoLoadStateViewHolder(binding, listener)
+                return PhotoLoadStateViewHolder(binding)
             }
         }
 
-        fun bind(loadState: LoadState){
+        fun bind(loadState: LoadState, listener: PhotoLoadStateClickListener){
             binding.apply {
                 progressIndicator.isVisible = loadState == LoadState.Loading
                 progressErrorText.isVisible = loadState != LoadState.Loading
                 retryButton.isVisible = loadState != LoadState.Loading
+                this.listener = listener
             }
         }
     }

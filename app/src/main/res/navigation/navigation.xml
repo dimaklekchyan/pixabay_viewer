@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/photoListFragment">
+    app:startDestination="@id/categoriesFragment">
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.klekchyan.pixabayviewer.ui.categories.CategoriesFragment"
+        android:label="CategoriesFragment"
+        tools:layout="@layout/fragment_categories">
+        <action
+            android:id="@+id/action_categoriesFragment_to_photoListFragment"
+            app:destination="@id/photoListFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/photoListFragment"
@@ -13,10 +23,15 @@
         <action
             android:id="@+id/action_photoListFragment_to_photoFragment"
             app:destination="@id/photoFragment" />
+        <argument
+            android:name="category"
+            app:argType="string" />
     </fragment>
+
     <fragment
         android:id="@+id/photoFragment"
         android:name="com.klekchyan.pixabayviewer.ui.photo.PhotoFragment"
         android:label="fragment_photo"
         tools:layout="@layout/fragment_photo" />
+
 </navigation>
