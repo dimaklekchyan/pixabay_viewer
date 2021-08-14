@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.klekchyan.pixabayviewer.databinding.FragmentPhotosListBinding
 
 class PhotoListFragment : Fragment() {
@@ -35,6 +37,17 @@ class PhotoListFragment : Fragment() {
                 footer = PhotoLoadStateAdapter(PhotoLoadStateClickListener{ adapter.retry() })
             )
             recyclerView.setHasFixedSize(true)
+
+            retryButton.setOnClickListener { adapter.retry() }
+        }
+
+        adapter.addLoadStateListener { loadState ->
+            binding.apply {
+                recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressIndicator.isVisible = loadState.source.refresh is LoadState.Loading
+                retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                progressErrorText.isVisible = loadState.source.refresh is LoadState.Error
+            }
         }
 
         viewModel.photoContainers.observe(viewLifecycleOwner, { data ->
