@@ -16,11 +16,8 @@ class PhotoFragment : Fragment() {
 
     private var _binding: FragmentPhotoBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: PhotoViewModel by viewModels {
-        PhotoViewModelFactory(
-            PhotoFragmentArgs.fromBundle(requireArguments()).imageUrl,
-            requireActivity().application)
-    }
+
+    private val viewModel: PhotoViewModel by viewModels()
     private var toast: Toast? = null
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -33,10 +30,12 @@ class PhotoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val imageUrl = PhotoFragmentArgs.fromBundle(requireArguments()).imageUrl
+
+        binding.wallpaper.setImage(imageUrl)
         binding.viewModel = viewModel
-        viewModel.photoUrl.observe(viewLifecycleOwner, {
-            binding.wallpaper.setImage(it)
-        })
+
+        viewModel.setImageUrl(imageUrl)
         viewModel.settingWallpaperState.observe(viewLifecycleOwner, { state ->
             when(state){
                 WallpaperState.SUCCESSFULLY_SET -> showToast("Wallpaper was set")

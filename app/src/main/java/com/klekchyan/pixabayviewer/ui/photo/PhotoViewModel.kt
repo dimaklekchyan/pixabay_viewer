@@ -8,67 +8,77 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 
 
 enum class WallpaperState{ SUCCESSFULLY_SET,  FAILURE}
 
-class PhotoViewModel(private val imageUrl: String, application: Application): AndroidViewModel(application) {
+class PhotoViewModel(application: Application): AndroidViewModel(application) {
 
-    private val glide = Glide.with(application)
-    private val windowManager = application.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    private val wallpaperManager = WallpaperManager.getInstance(application)
+    private var glide: RequestManager? = null
+    private var windowManager: WindowManager? = null
+    private var wallpaperManager: WallpaperManager? = null
+    private var imageUrl: String? = null
 
     private val _settingWallpaperState = MutableLiveData<WallpaperState>()
     val settingWallpaperState: LiveData<WallpaperState>
         get() = _settingWallpaperState
 
-    val photoUrl: LiveData<String> = liveData { emit(imageUrl) }
-
-    var bitmap: Bitmap? = null
-
-    fun setImageAsWallpaper(){
-
-        if(bitmap == null){
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    glide.asBitmap()
-                        .load(imageUrl.toUri())
-                        .into(object : CustomTarget<Bitmap>() {
-                            @RequiresApi(Build.VERSION_CODES.N)
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                bitmap = resource//
-                            }
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
-                        })
-                } catch (ex: IOException) {
-                    _settingWallpaperState.value = WallpaperState.FAILURE
-                    Timber.e("$ex")
-                }
-            }
-        } else setWallpaper(bitmap!!)
+    init {
+        glide = Glide.with(application)
+        windowManager = application.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        wallpaperManager = WallpaperManager.getInstance(application)
     }
 
-    private fun getPhoneMetrics(): Pair<Int, Int>{
-        val metrics = DisplayMetrics()
-        windowManager.defaultDisplay.getRealMetrics(metrics)
+    fun setImageUrl(imageUrl: String?){
+        this.imageUrl = imageUrl
+    }
 
-        val phoneHeight = metrics.heightPixels
-        val phoneWidth = metrics.widthPixels
-        return phoneHeight to phoneWidth
+    fun onSetImageAsWallpaperButtonClicked(){
+        viewModelScope.launch {
+            try{
+                glide?.let {
+                    it.asBitmap()
+                        .load(imageUrl?.toUri())
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            setWallpaper(resource)
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _settingWallpaperState.value = WallpaperState.SUCCESSFULLY_SET
+                            }
+                        }
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                        }
+                    })
+                }
+            } catch (ex: IOException) {
+                withContext(Dispatchers.Main){ _settingWallpaperState.value = WallpaperState.FAILURE }
+                Timber.e("$ex")
+            }
+        }
+    }
+
+    private fun setWallpaper(bitmap: Bitmap){
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+            wallpaperManager?.setBitmap(getFittedBitmapToSet(bitmap))
+        } else {
+            wallpaperManager?.setBitmap(getFittedBitmapToSet(bitmap), null, false, WallpaperManager.FLAG_SYSTEM )
+        }
     }
 
     private fun getFittedBitmapToSet(originalBitmap: Bitmap): Bitmap{
@@ -89,33 +99,19 @@ class PhotoViewModel(private val imageUrl: String, application: Application): An
         return Bitmap.createBitmap(scaledBitmap, x, 0, phoneWidth, phoneHeight)
     }
 
-    private fun setWallpaper(bitmap: Bitmap){
-        try {
-            val fittedBitmap = getFittedBitmapToSet(bitmap)
-            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
-                wallpaperManager.setBitmap(fittedBitmap)
-            } else {
-                wallpaperManager.setBitmap(
-                    fittedBitmap,
-                    null,
-                    false,
-                    WallpaperManager.FLAG_SYSTEM )
-                _settingWallpaperState.value = WallpaperState.SUCCESSFULLY_SET
-            }
-        } catch (ex: Exception){
-            _settingWallpaperState.value = WallpaperState.FAILURE
-            Timber.e("$ex")
-        }
-    }
-}
+    private fun getPhoneMetrics(): Pair<Int, Int>{
+        val metrics = DisplayMetrics()
+        windowManager?.defaultDisplay?.getRealMetrics(metrics)
 
-class PhotoViewModelFactory(
-    private val imageUrl: String,
-    private val application: Application): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PhotoViewModel::class.java)) {
-            return PhotoViewModel(imageUrl, application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        val phoneHeight = metrics.heightPixels
+        val phoneWidth = metrics.widthPixels
+        return phoneHeight to phoneWidth
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        glide = null
+        windowManager = null
+        wallpaperManager = null
     }
 }

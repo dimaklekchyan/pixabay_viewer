@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.klekchyan.pixabayviewer.R
 
@@ -17,6 +18,7 @@ fun ImageView.setImage(url: String?){
             .load(imgUri)
             .optionalCenterCrop()
             .transition(DrawableTransitionOptions.withCrossFade())
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .error(R.drawable.ic_broken_image)
             .into(this)
     }
@@ -24,7 +26,7 @@ fun ImageView.setImage(url: String?){
 
 //CategoriesFragment
 @BindingAdapter("setText")
-fun TextView.setText(title: String?){
+fun TextView.setFittedText(title: String?){
     val text = title?.lowercase()?.replaceFirstChar { title.first().uppercase() }
     this.text = text
 }
