@@ -23,12 +23,14 @@
         android:clickable="true"
         android:focusable="true"
         app:cardCornerRadius="@dimen/corner_radius"
-        app:cardElevation="@dimen/general_elevation">
+        app:cardElevation="@dimen/general_elevation"
+        setColor="@{category.colorId}">
         <TextView
             setText="@{category.name()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@color/white"
             tools:text = "Health"/>
 
     </com.google.android.material.card.MaterialCardView>

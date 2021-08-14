@@ -7,4 +7,25 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="category_background">#D31D1D</color>
+    <color name="category_fashion">#D3AB1D</color>
+    <color name="category_nature">#1DD37C</color>
+    <color name="category_science">#1DC8D3</color>
+    <color name="category_education">#6D1DD3</color>
+    <color name="category_feelings">#D31D49</color>
+    <color name="category_health">#37D31D</color>
+    <color name="category_people">#A41DD3</color>
+    <color name="category_religion">#D3AB1D</color>
+    <color name="category_places">#D3491D</color>
+    <color name="category_animals">#C5D31D</color>
+    <color name="category_industry">#A06835</color>
+    <color name="category_computer">#4C1DD3</color>
+    <color name="category_food">#898B0C</color>
+    <color name="category_sports">#B8DFCC</color>
+    <color name="category_transportation">#83397B</color>
+    <color name="category_travel">#73E077</color>
+    <color name="category_buildings">#B88967</color>
+    <color name="category_business">#ACC02F</color>
+    <color name="category_music">#5C1E56</color>
 </resources>

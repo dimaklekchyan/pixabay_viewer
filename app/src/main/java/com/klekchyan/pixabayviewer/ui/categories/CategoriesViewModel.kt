@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.klekchyan.pixabayviewer.data.Category
 import com.klekchyan.pixabayviewer.data.PhotoRepository
-import com.klekchyan.pixabayviewer.network.PixabayApi
 
 class CategoriesViewModel: ViewModel() {
     private val repository = PhotoRepository()

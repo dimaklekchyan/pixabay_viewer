@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.klekchyan.pixabayviewer.ui.categories.CategoriesFragment"
-        android:label="CategoriesFragment"
+        android:label="Categories"
         tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/action_categoriesFragment_to_photoListFragment"
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/photoListFragment"
         android:name="com.klekchyan.pixabayviewer.ui.listOfPhotos.PhotoListFragment"
-        android:label="fragment_photos_list"
+        android:label="Pictures"
         tools:layout="@layout/fragment_photos_list" >
         <action
             android:id="@+id/action_photoListFragment_to_photoFragment"
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/photoFragment"
         android:name="com.klekchyan.pixabayviewer.ui.photo.PhotoFragment"
-        android:label="fragment_photo"
+        android:label="Picture"
         tools:layout="@layout/fragment_photo" >
         <argument
             android:name="imageUrl"
